@@ -1,0 +1,94 @@
+#####################################################################################################
+DATABRICKS ASSET BUNDLE CONFIGURATION FOR THE PROJECT 
+It includes the following files : 
+-variables.yml
+-etl.pipeline.yml
+-dabs_workflow.jobs.yml
+
+#####################################################################################################
+
+
+#######################
+BUNDLE NAME
+#######################
+bundle:
+  name: demo-databricks-cicd-bundle
+
+#######################################################
+Additional YAML configuration to include for deployment
+#######################################################
+
+
+include:
+  - "./resources/variables.yml"
+  - "./resources/pipeline/etl_pipeline.pipeline.yml"
+  - "./resources/job/dabs_workflow.job.yml"
+
+
+################################################################
+These are the targets to use for deployments and workflow runs
+################################################################
+
+
+targets:
+  dev:
+  # - Deployed resources get prefixed with '[dev my_username]'
+  # - Any job schedules and triggers are paused by default
+
+    mode: development
+    default: true
+    resources:
+     jobs:
+      etl_workflow:  #---------> job to run
+      name: etl_workflow_${bundle.target}
+      tasks:
+      - task_key: Unit_Tests
+        existing_cluster_id: ${var.cluster_id}
+      - task_key: Visualisation
+        existing_cluster_id: ${var.cluster_id}
+
+
+    workspace:
+      root_path: Workspace/Users/${workspace.current_user.userName/${bundle.name}/${bundle.target}
+
+
+  stage:
+  # - Deployed resources get prefixed with '[dev my_username]'
+  # - Any job schedules and triggers are paused by default
+
+    mode: development
+    default: true
+    resources:
+     jobs:
+      etl_workflow:  #---------> job to run
+      name: etl_workflow_${bundle.target}
+      tasks:
+      - task_key: Unit_Tests
+        existing_cluster_id: ${var.cluster_id}
+      - task_key: Visualisation
+        existing_cluster_id: ${var.cluster_id}
+
+
+    workspace:
+      root_path: Workspace/Users/${workspace.current_user.userName/${bundle.name}/${bundle.target}
+
+  prod:
+  # - Deployed resources get prefixed with '[dev my_username]'
+  # - Any job schedules and triggers are paused by default
+
+    mode: production
+    default: true
+    resources:
+     jobs:
+      etl_workflow:  #---------> job to run
+      name: etl_workflow_${bundle.target}
+      tasks:
+      - task_key: Unit_Tests
+        existing_cluster_id: ${var.cluster_id}
+      - task_key: Visualisation
+        existing_cluster_id: ${var.cluster_id}
+
+
+    workspace:
+      root_path: Workspace/Users/${workspace.current_user.userName/${bundle.name}/${bundle.target}
+

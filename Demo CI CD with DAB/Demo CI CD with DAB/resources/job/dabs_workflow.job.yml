@@ -1,0 +1,57 @@
+##################################################
+# JOB CONFIGURATION #
+##################################################
+
+############## Notebook path must be with respect to where this yml file is placed
+
+resources:
+  jobs:
+    etl_workflow:  ## Name of job to run 
+     name: etl_workflow_${bundle.target}
+     description: Final workflow SDK
+     email_notifications:
+       on_failure:
+        -${var.my_email}
+
+    tasks:
+      - task_key: Unit_Tests
+        notebook_task: 
+          notebook_path: ../../run_unit_tests.py  ## This is relative to the where gabs_workflow.job.yml workfile is located
+          source: WORKSPACE
+        description:
+          Execute Unit Test for the project
+
+      - task_key: Visualisation
+        depends_on: 
+          -task_key: Health_ETL
+        notebook_task: 
+          notebook_path: ../../src/Final Visualisation.py  ## This is relative to the where databricks.yml workfile is located
+          base_parameters: 
+            catalog_name: ${var.target_catalog}
+          source: WORKSPACE
+        description:
+          Final visualisation for the project
+
+      - task_key: ETL
+        depends_on: 
+          -task_key: Unit_Tests
+        pipeline_task: 
+          pipeline_id: ${resources.pipelines.etl_pipeline.id}
+          full_resfresh: True
+        description: Delta Live Tables
+
+
+########################################################
+# Dynamic Job Parameters Based on Our Variables        #
+########################################################
+
+parameters: 
+  -name: target
+   default: ${bundle.target}
+  
+  -name: catalog_name
+
+
+
+
+

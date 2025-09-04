@@ -1,0 +1,63 @@
+#################################################
+# DEFINE THE VARIABLES USED IN DAB              #
+#################################################
+
+variables: 
+ username:
+  description: username
+  default: ${workspace.current_user.short_name}
+
+myemail: 
+  description: Email address for alert notification
+  default: garima.garima@LEGO.com
+
+## LOOKUP VARIABLE
+## - Obtain the cluster ID using cluster name 
+cluster_id:
+  description: Cluster ID to be used 
+  lookup:
+    cluster: 0209-103814-cmyqs4w0
+
+#################################################
+## Dynamically set catalog_dev variable        ##
+#################################################
+
+dev_tag:
+  description: Set the dev tag for the catalog name
+  default: _1_dev
+
+catalog_dev: 
+  description: Set the catalog to create tables in
+  default: ${var.username}${var.dev_tag}
+
+stage_tag:
+  description: Set the stage tag for the catalog name
+  default: _1_stage
+
+catalog_dev: 
+  description: Set the catalog to create tables in
+  default: ${var.username}${var.stage_tag}
+ 
+prod_tag:
+  description: Set the prod tag for the catalog name
+  default: _1_prod
+
+catalog_dev: 
+  description: Set the catalog to create tables in
+  default: ${var.username}${var.prod_tag}
+
+schema: 
+  description: Schema to write to
+  default: default
+
+
+#############################################################################################
+ # Default values for raw_data_path and target_catalog point to the dev raw data and catalog. #
+ # This values will be modified based on the deployed target in the databricks.yml file.      #
+#############################################################################################
+
+raw_data_path: 
+  description: Path to source csv files to ingest 
+
+
+
